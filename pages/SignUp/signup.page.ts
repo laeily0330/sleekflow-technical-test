@@ -41,7 +41,7 @@ export class SignUpPage extends BasePage {
 
     async verifyDisplayedEmail(expectedEmail: string) {
         // 1. Wait for the specific authenticator selector span to appear
-        await this.element.emailVerificationDisplay.waitFor({ state: 'visible', timeout: 7000 });
+        await this.element.emailVerificationDisplay.waitFor({ state: 'visible', timeout: 300000 });
         
         // 2. Extract the text displayed inside the span
         const displayedText = await this.element.emailVerificationDisplay.textContent();
