@@ -11,18 +11,17 @@ export class LoginPage extends BasePage {
     }
 
     async clickLoginNav() {
-        //await this.element.loginNavigationButton.waitFor({ state: 'visible', timeout: 5000 });
         await this.element.loginNavigationButton.click();
     }
 
     async navigatetoLoginPortal(): Promise<Page> {
-        // 1. Set up the listener for the new tab popup event
+        // Set up the listener for the new tab popup event
         const pagePromise = this.page.waitForEvent('popup');
         
-        // 2. Click the 'Start for Free' or landing page link that triggers the popup
+        // Click the 'Start for Free' or landing page link that triggers the popup
         await this.page.getByRole('navigation').getByRole('link', { name: 'Log In' }).click();
         
-        // 3. Wait for the new tab to register and finish loading
+        // Wait for the new tab to register and finish loading
         const newTab = await pagePromise;
         await newTab.waitForLoadState();
         
@@ -30,10 +29,10 @@ export class LoginPage extends BasePage {
     }
 
     async verifyOnLoginPage() {
-        // 1. Explicitly wait for the unique "Sign in to continue" header text to render
+        // Explicitly wait for the unique "Sign in to continue" header text to render
         await this.element.loginPageHeader.waitFor({ state: 'visible', timeout: 10000 });
         
-        // 2. Double check the input fields are ready for text entry
+        // Double check the input fields are ready for text entry
         await expect(this.element.usernameInput).toBeVisible();
     }
 
@@ -61,8 +60,7 @@ export class LoginPage extends BasePage {
     }
 
     async verifyUserIsLoggedIn() {
-        // ⚡ THE FIX: Target any of the three landed URL states using a regex OR match
-        //const authorizedRoutes = /register-company|onboarding\/ai-checklist|inbox\?sandbox=true/i;
+        // Target any of the three landed URL states using a regex OR match
         const authorizedRoutes = /register-company|onboarding\/ai-checklist|inbox/i;
         
         // Web-first assertion will poll the URL repeatedly until the redirect completes

@@ -1,7 +1,6 @@
 import { Page } from '@playwright/test';
 import { createBdd } from 'playwright-bdd';
 import { SignUpPage } from '../pages/SignUp/signup.page';
-//import { faker } from '@faker-js/faker';
 
 const { Given, When, Then } = createBdd();
 let signupTab: Page; 
@@ -9,14 +8,13 @@ let localGeneratedEmail: string;
 
 async function generateTestEmail(): Promise<string> {
   const { faker } = await import('@faker-js/faker');
-  const randomWord = faker.word.sample({ length: 3 }); 
+  const randomWord = faker.word.sample({ length: 2 }); 
   const randomNumber = faker.number.int({ min: 10, max: 99 }); 
-  return `qa-${randomWord}${randomNumber}@yopmail.com`;
+  return `qalely${randomNumber}@sleekflow.io`;
 }
 
 console.log(generateTestEmail);
 
-// Background Hooks
 Given('I am on the sleekflow homepage', async ({ page }) => {
   const homepage = new SignUpPage(page);
   await homepage.navigate();
@@ -27,10 +25,9 @@ When('I navigate to the signup tab window', async ({ page }) => {
   signupTab = await homepage.navigatetoSignUp(); 
 });
 
-// Step 1: Email Process Actions
+// Email Process Actions
 When('I enter my email and accept the terms confirmation', async ({}) => {
   const { faker } = await import('@faker-js/faker');
-  // We initialize the SignUpPage directly with our active signup tab context
   const signUpPage = new SignUpPage(signupTab);
   localGeneratedEmail = await generateTestEmail();
   console.log(`Generated Positive Test Email: ${localGeneratedEmail}`);
@@ -44,29 +41,28 @@ When('I click the first signup button', async ({}) => {
   await signUpPage.clickInitialSignUp();
 });
 
-// Step 2: Verification Assertion
+// Verification Assertion
 Then('I should see my correct email displayed on the password screen', async ({}) => {
   const signUpPage = new SignUpPage(signupTab);
   await signUpPage.verifyDisplayedEmail(localGeneratedEmail);
 });
 
-// Step 2: Password Process Actions
+// Password Process Actions
 When('I enter my secure account password', async ({}) => {
   const signUpPage = new SignUpPage(signupTab);
   await signUpPage.enterPassword('SecurePass123!');
-  console.log(`isi password`);
+  //console.log(`isi password`);
 });
 
 When('I click the final signup submission button', async ({}) => {
   const signUpPage = new SignUpPage(signupTab);
   await signUpPage.clickFinalSignUp();
-  console.log(`klik signup`);
+  //console.log(`klik signup`);
 });
 
 // Post-Registration Assertions
 Then('the account should be saved successfully', async ({}) => {
   const signUpPage = new SignUpPage(signupTab);
-  //localGeneratedEmail = await generateTestEmail();
   
   // Pass the generated email string straight into the validator
   await signUpPage.verifyText(localGeneratedEmail); 

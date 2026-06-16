@@ -6,19 +6,18 @@ export const loginLocator = (page: Page) => {
         loginNavigationButton: page.getByRole('navigation').getByRole('link', { name: 'Log In', exact: true }),
         loginPageHeader: page.locator('p:has-text("Sign in to continue to SleekFlow")'),
         
-        // Step 1: Identification Input Fields & Actions
+        // Identification Input Fields & Actions
         usernameInput: page.locator('input#username[name="username"]'),
         continueButton: page.locator('button._button-login-id[data-action-button-primary="true"]'),
         
-        // Step 2: Verification Domain Anchor 
         // Reuses the identical class we successfully identified in the signup flow!
         emailVerificationDisplay: page.locator('span.ulp-authenticator-selector-text'),
         
-        // Step 2: Security Credentials Input & Actions
+        // Credentials Input & Actions
         passwordInput: page.locator('input#password[name="password"]'),
         signInButton: page.locator('button._button-login-password[data-action-button-primary="true"]'),
         
-        // Step 3: Verify login page
+        // Verify login page
         signOutButton: page.locator('span.MuiTypography-menu1:has-text("Sign out"), button.MuiTypography-body1:has-text("Sign out")'),
         dashboardEmailDisplay: page.locator('p[data-sentry-source-file="MainPanel.tsx"]'),
 

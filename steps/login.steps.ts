@@ -5,14 +5,13 @@ import { LoginPage } from '../pages/Login/login.page';
 
 const { Given, When, Then } = createBdd();
 let loginTab: Page; 
-// You can switch this target string out with whatever real user email credential you are logging into!
 const testAccountEmail = 'ridge421@yopmail.com';
 
 When('I navigate to the login tab window', async ({ page }) => {
-  // 1. Instantiate the correct page object
+  // Instantiate the correct page object
   const loginPage = new LoginPage(page);
   
-  // 2. Open the new tab using its own isolated method
+  // Open the new tab using its own isolated method
   loginTab = await loginPage.navigatetoLoginPortal(); 
 });
 
@@ -50,8 +49,6 @@ Then('I should be logged in successfully and see the signout option', async ({})
   const loginPage = new LoginPage(loginTab);
   await loginPage.verifyUserIsLoggedIn();
 });
-
-// Inside login.steps.ts
 
 When('I enter an empty email address', async ({}) => {
   const loginPage = new LoginPage(loginTab);
