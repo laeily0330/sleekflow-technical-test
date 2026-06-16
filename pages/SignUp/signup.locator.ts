@@ -10,7 +10,10 @@ export const signUpLocator = (page: Page) => ({
     continueButton: page.locator('button[data-action-button-primary="true"]'),
     
     //Input Password on the signup page
-    emailVerificationDisplay: page.locator('span.ulp-authenticator-selector-text'),
+    //emailVerificationDisplay: page.locator('span.ulp-authenticator-selector-text'),
+    //emailVerificationDisplay: (email: string) => page.getByText(email, { exact: true }),
+    emailVerificationDisplay: page.locator('span.ulp-authenticator-selector-text, div.ulp-authenticator-wrapper span').first(),
+    //emailVerificationDisplay: page.locator('div.ulp-authenticator-wrapper span, div[class*="authenticator"] span, span.ulp-authenticator-selector-text').first(),
     passwordInput: page.locator('#password'),
     finalSignUpButton: page.locator('button[data-action-button-primary="true"]'),
     

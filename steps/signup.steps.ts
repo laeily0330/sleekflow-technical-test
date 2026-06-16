@@ -7,6 +7,15 @@ const { Given, When, Then } = createBdd();
 let signupTab: Page; 
 let localGeneratedEmail: string;
 
+async function generateTestEmail(): Promise<string> {
+  const { faker } = await import('@faker-js/faker');
+  const randomWord = faker.word.sample({ length: 3 }); 
+  const randomNumber = faker.number.int({ min: 10, max: 99 }); 
+  return `qa-${randomWord}${randomNumber}@yopmail.com`;
+}
+
+console.log(generateTestEmail);
+
 // Background Hooks
 Given('I am on the sleekflow homepage', async ({ page }) => {
   const homepage = new SignUpPage(page);
@@ -23,12 +32,11 @@ When('I enter my email and accept the terms confirmation', async ({}) => {
   const { faker } = await import('@faker-js/faker');
   // We initialize the SignUpPage directly with our active signup tab context
   const signUpPage = new SignUpPage(signupTab);
-  const genericName = faker.word.sample({ length: 5 }); // e.g., "cloud"
-  localGeneratedEmail = `${genericName}${faker.string.numeric(3)}@yopmail.com`;
-  console.log(localGeneratedEmail);
+  localGeneratedEmail = await generateTestEmail();
+  console.log(`Generated Positive Test Email: ${localGeneratedEmail}`);
 
   await signUpPage.enterEmailAndAgree(localGeneratedEmail);
-  //await signUpPage.acceptTerms();
+  await signUpPage.acceptTerms();
 });
 
 When('I click the first signup button', async ({}) => {
@@ -46,16 +54,19 @@ Then('I should see my correct email displayed on the password screen', async ({}
 When('I enter my secure account password', async ({}) => {
   const signUpPage = new SignUpPage(signupTab);
   await signUpPage.enterPassword('SecurePass123!');
+  console.log(`isi password`);
 });
 
 When('I click the final signup submission button', async ({}) => {
   const signUpPage = new SignUpPage(signupTab);
   await signUpPage.clickFinalSignUp();
+  console.log(`klik signup`);
 });
 
 // Post-Registration Assertions
 Then('the account should be saved successfully', async ({}) => {
   const signUpPage = new SignUpPage(signupTab);
+  //localGeneratedEmail = await generateTestEmail();
   
   // Pass the generated email string straight into the validator
   await signUpPage.verifyText(localGeneratedEmail); 
@@ -90,12 +101,12 @@ Then('I should see a field required validation error', async ({}) => {
   await signUpPage.verifyErrorMessageText('Please enter an email address');
 });
 
-// Scenario: Missing Terms & Conditions
 When('I enter a valid email address', async ({}) => {
   const signUpPage = new SignUpPage(signupTab);
-  const { faker } = await import('@faker-js/faker');
-  const tempEmail = `${faker.word.sample({ length: 6 })}@yopmail.com`;
-  await signUpPage.enterEmailOnly(tempEmail);
+  localGeneratedEmail = await generateTestEmail();
+  console.log(`[T&C Boundary Flow] Using Email: ${localGeneratedEmail}`);
+
+  await signUpPage.enterEmailOnly(localGeneratedEmail);
 });
 
 When('I do not check the terms and conditions checkbox', async ({}) => {

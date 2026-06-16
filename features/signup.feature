@@ -4,7 +4,7 @@ Feature: SleekFlow User Account Registration
     Given I am on the sleekflow homepage
     When I navigate to the signup tab window
 
-  @signup
+  @signup-positive
   Scenario: Register a new user account via two-step wizard
     When I enter my email and accept the terms confirmation
     And I click the first signup button

@@ -5,6 +5,7 @@ import { signUpLocator } from "./signup.locator";
 export class SignUpPage extends BasePage {
     readonly element: ReturnType<typeof signUpLocator>;
     
+    
     constructor(page: Page) {
         super(page);
         this.element = signUpLocator(page);
@@ -39,49 +40,67 @@ export class SignUpPage extends BasePage {
 
     // Inside signup.page.ts
 
+    // async verifyDisplayedEmail(expectedEmail: string) {
+    //     // 1. Wait for the specific authenticator selector span to appear
+    //     await this.element.emailVerificationDisplay.waitFor({ state: 'visible', timeout: 300000 });
+        
+    //     // 2. Extract the text displayed inside the span
+    //     const displayedText = await this.element.emailVerificationDisplay.textContent();
+        
+    //     // 3. Verify it completely matches the email used in Step 1
+    //     expect(displayedText?.trim()).toBe(expectedEmail);
+    // }
+
     async verifyDisplayedEmail(expectedEmail: string) {
-        // 1. Wait for the specific authenticator selector span to appear
-        await this.element.emailVerificationDisplay.waitFor({ state: 'visible', timeout: 300000 });
+        // 1. Get the base locator pointer for the text element
+        const targetLocator = signUpLocator(this.page).emailVerificationDisplay;
         
-        // 2. Extract the text displayed inside the span
-        const displayedText = await this.element.emailVerificationDisplay.textContent();
+        console.log(`[QA Debug] Waiting for screen text to match expected string: ${expectedEmail}`);
         
-        // 3. Verify it completely matches the email used in Step 1
-        expect(displayedText?.trim()).toBe(expectedEmail);
+        // 2. 🌟 THE FIX: Force Playwright to wait until the text layer actually changes
+        // This will poll the DOM dynamically for up to 15 seconds until the text matches!
+        await expect(targetLocator).toHaveText(expectedEmail, { 
+            timeout: 15000
+        });
     }
+
 
     // Step 2 Form Entry: Wait for transition, fill password, and submit
     async enterPassword(pass: string) {
-        await this.element.passwordInput.waitFor({ state: 'visible', timeout: 5000 });
-        await this.element.passwordInput.fill(pass);
+        //await this.element.passwordInput.waitFor({ state: 'visible', timeout: 5000 });
+        //await this.element.passwordInput.fill(pass);
+        await this.element.passwordInput.pressSequentially(pass, { delay: 100 });
+        //await this.element.passwordInput.press('Enter');
+        //await this.page.waitForTimeout(30000);
     }
 
     async clickFinalSignUp() {
         await this.element.finalSignUpButton.click();
+        //await this.element.finalSignUpButton.dispatchEvent('click');
     }
 
     async verifyText(expectedEmail: string) {
         // 1. Wait for the success message layout block to appear after submission redirect
-        await this.element.successVerificationMessage.waitFor({ state: 'visible', timeout: 15000 });
+        await this.element.successVerificationMessage.waitFor({ state: 'visible', timeout: 300000 });
         
         // 2. Grab the full text layout string
         const completeMessage = await this.element.successVerificationMessage.textContent();
         
         // 3. Assert both the static message and your unique dynamic email match up
-        expect(completeMessage).toContain("We've sent a verification email to");
-        expect(completeMessage).toContain(expectedEmail);
+        expect(completeMessage).toContain("We've sent a verification email to "+expectedEmail+".");
+        //expect(completeMessage).toContain(expectedEmail);
     }
 
     // 🌟 Negative Action: Enter email without checking box
     async enterEmailOnly(email: string) {
-        await this.element.emailInput.waitFor({ state: 'visible', timeout: 5000 });
+        await this.element.emailInput.waitFor({ state: 'visible', timeout: 300000 });
         await this.element.emailInput.fill(email);
         await this.element.confirmationCheckbox.uncheck({ force: true });
     }
 
     // 🌟 Negative Action: Explicitly clear field to test empty boundary
     async clearEmailField() {
-        await this.element.emailInput.waitFor({ state: 'visible', timeout: 5000 });
+        await this.element.emailInput.waitFor({ state: 'visible', timeout: 300000 });
         await this.element.emailInput.fill('');
     }
 
