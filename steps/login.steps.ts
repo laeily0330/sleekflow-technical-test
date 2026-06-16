@@ -5,7 +5,7 @@ import { LoginPage } from '../pages/Login/login.page';
 
 const { Given, When, Then } = createBdd();
 let loginTab: Page; 
-const testAccountEmail = 'ridge421@yopmail.com';
+const testAccountEmail = 'lely0330@gmail.com';
 
 When('I navigate to the login tab window', async ({ page }) => {
   // Instantiate the correct page object
