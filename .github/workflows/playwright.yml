@@ -16,7 +16,7 @@ jobs:
     - name: Setup Node.js Environment
       uses: actions/setup-node@v4
       with:
-        node-cache: 'npm'
+        cache: 'npm'
         node-version: lts/*
         
     - name: Install Project Dependencies
